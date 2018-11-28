@@ -8,9 +8,9 @@ public class Contato implements Serializable{
     private String nome;
     private String fone;
     private String email;
+    private Integer favorito;
 
-    public Contato()
-    {
+    public Contato() {
     }
 
     public long getId() {
@@ -37,5 +37,7 @@ public class Contato implements Serializable{
     public void setEmail(String email) {
         this.email = email;
     }
+    public Integer getFavorito() { return favorito; }
+    public void setFavorito(Integer favorito) { this.favorito = favorito; }
 }
 

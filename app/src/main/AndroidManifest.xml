@@ -30,6 +30,12 @@
             android:label="@string/title_activity_detalhe"
             android:theme="@style/AppTheme.NoActionBar" />
 
+        <activity
+            android:name=".activity.FiltroFavoritosActivity"
+            android:label="Mostrando contatos favoritados" />
+
+
+
 
 
     </application>

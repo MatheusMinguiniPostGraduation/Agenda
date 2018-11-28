@@ -7,5 +7,11 @@
         android:title="@string/nome_do_contato"
         app:actionViewClass="android.support.v7.widget.SearchView"
         />
+
+    <item
+        android:id="@+id/selecionarFavoritosMenu"
+        app:showAsAction="collapseActionView"
+        android:icon="@drawable/ic_done"
+        android:title="Apenas favoritos"/>
 </menu>
 

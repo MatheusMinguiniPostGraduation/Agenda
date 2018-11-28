@@ -17,18 +17,19 @@
         app:contentPadding="1dp">
 
         <TextView
-            android:id="@+id/nome"
+            android:id="@+id/nomeContatoFavorito"
             android:layout_width="wrap_content"
             android:layout_height="50dp"
             android:gravity="center_vertical"
             android:textSize="20sp" />
 
         <RatingBar
-            android:id="@+id/ratingBarContato"
+            android:id="@+id/ratingBarContatoFavorito"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="325dp"
             android:numStars="1"
+            android:onClick="favoritarContato"
             android:stepSize="1" />
 
     </android.support.v7.widget.CardView>

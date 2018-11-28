@@ -20,17 +20,23 @@ public class ContatoDAO {
         this.dbHelper=new SQLiteHelper(context);
     }
 
-    public  List<Contato> buscaTodosContatos()
+    public  List<Contato> buscaTodosContatos(Boolean buscarApenasFavoritos)
     {
-        database=dbHelper.getReadableDatabase();
+        database = dbHelper.getReadableDatabase();
         List<Contato> contatos = new ArrayList<>();
 
         Cursor cursor;
 
-        String[] cols=new String[] {SQLiteHelper.KEY_ID,SQLiteHelper.KEY_NAME, SQLiteHelper.KEY_FONE, SQLiteHelper.KEY_EMAIL};
+        String[] cols=new String[] {SQLiteHelper.KEY_ID,SQLiteHelper.KEY_NAME, SQLiteHelper.KEY_FONE, SQLiteHelper.KEY_EMAIL, SQLiteHelper.KEY_FAVORITO};
 
-        cursor = database.query(SQLiteHelper.DATABASE_TABLE, cols, null , null,
-                null, null, SQLiteHelper.KEY_NAME);
+        if(!buscarApenasFavoritos){
+            cursor = database.query(SQLiteHelper.DATABASE_TABLE, cols, null , null,
+                    null, null, SQLiteHelper.KEY_NAME);
+        }else{
+            cursor = database.query(SQLiteHelper.DATABASE_TABLE, cols, SQLiteHelper.KEY_FAVORITO.concat("=?"), new String[] { "1" }, null,
+                  null, SQLiteHelper.KEY_NAME);
+        }
+
 
         while (cursor.moveToNext())
         {
@@ -39,6 +45,7 @@ public class ContatoDAO {
             contato.setNome(cursor.getString(1));
             contato.setFone(cursor.getString(2));
             contato.setEmail(cursor.getString(3));
+            contato.setFavorito(cursor.getInt(4));
             contatos.add(contato);
 
 
@@ -74,9 +81,8 @@ public class ContatoDAO {
             contato.setFone(cursor.getString(2));
             contato.setEmail(cursor.getString(3));
             contatos.add(contato);
-
-
         }
+
         cursor.close();
 
         database.close();
@@ -90,6 +96,7 @@ public class ContatoDAO {
         values.put(SQLiteHelper.KEY_NAME, c.getNome());
         values.put(SQLiteHelper.KEY_FONE, c.getFone());
         values.put(SQLiteHelper.KEY_EMAIL, c.getEmail());
+        values.put(SQLiteHelper.KEY_FAVORITO, c.getFavorito());
 
        if (c.getId()>0)
           database.update(SQLiteHelper.DATABASE_TABLE, values, SQLiteHelper.KEY_ID + "="
@@ -97,13 +104,19 @@ public class ContatoDAO {
         else
            database.insert(SQLiteHelper.DATABASE_TABLE, null, values);
 
-
-
         database.close();
 
     }
 
+    public void atualizarContato (Contato contato) {
 
+        database = dbHelper.getWritableDatabase();
+        ContentValues values = new ContentValues();
+
+        values.put("favorito", contato.getFavorito());
+
+        database.update(SQLiteHelper.DATABASE_TABLE, values, "id=?", new String[]{String.valueOf(contato.getId())});
+    }
 
 
     public void apagaContato(Contato c)

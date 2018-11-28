@@ -19,10 +19,13 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.support.v7.widget.helper.ItemTouchHelper;
+import android.util.Log;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.RatingBar;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -132,14 +135,23 @@ public class MainActivity extends AppCompatActivity{
             }
         });
 
-
-
         searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
 
         searchView.setIconifiedByDefault(true);
 
-
         return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        Intent intent;
+
+        if(item.getItemId() == R.id.selecionarFavoritosMenu){
+            intent = new Intent(getApplicationContext(), FiltroFavoritosActivity.class);
+            startActivity(intent);
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 
 
@@ -181,7 +193,7 @@ public class MainActivity extends AppCompatActivity{
         contatos.clear();
 
         if (nomeContato==null) {
-            contatos.addAll(cDAO.buscaTodosContatos());
+            contatos.addAll(cDAO.buscaTodosContatos(Boolean.FALSE));
             empty.setText(getResources().getString(R.string.lista_vazia));
             fab.show();
 
