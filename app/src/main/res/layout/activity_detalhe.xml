@@ -50,17 +50,38 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content" >
         </EditText>
+
+        <TextView
+            android:id="@+id/textView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Fone 2" />
+
+        <EditText
+            android:id="@+id/editTextFone2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:inputType="phone" />
+
         <TextView
             android:id="@+id/textViewEmail"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/email" >
-        </TextView>
+            android:text="@string/email" />
+
         <EditText
             android:id="@+id/editTextEmail"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" >
-        </EditText>
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:inputType="textEmailAddress" />
+
+        <TextView
+            android:id="@+id/textViewDataNascimento"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Selecione a data de nascimento" />
     </LinearLayout>
 </android.support.design.widget.CoordinatorLayout>
 
