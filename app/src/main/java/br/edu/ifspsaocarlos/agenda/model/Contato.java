@@ -10,6 +10,7 @@ public class Contato implements Serializable{
     private String fone2;
     private String email;
     private Integer favorito;
+    private String dataNascimento;
 
     public Contato() {
     }
@@ -42,5 +43,13 @@ public class Contato implements Serializable{
     }
     public Integer getFavorito() { return favorito; }
     public void setFavorito(Integer favorito) { this.favorito = favorito; }
+
+    public String getDataNascimento() {
+        return dataNascimento;
+    }
+
+    public void setDataNascimento(String dataNascimento) {
+        this.dataNascimento = dataNascimento;
+    }
 }
 

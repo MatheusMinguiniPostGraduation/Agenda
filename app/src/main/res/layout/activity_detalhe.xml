@@ -81,7 +81,14 @@
             android:id="@+id/textViewDataNascimento"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Selecione a data de nascimento" />
+            android:text="Data de nascimento" />
+
+        <EditText
+            android:id="@+id/dataNascimentoEditText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:inputType="date" />
     </LinearLayout>
 </android.support.design.widget.CoordinatorLayout>
 

@@ -27,7 +27,8 @@ public class ContatoDAO {
 
         Cursor cursor;
 
-        String[] cols=new String[] {SQLiteHelper.KEY_ID,SQLiteHelper.KEY_NAME, SQLiteHelper.KEY_FONE, SQLiteHelper.KEY_FONE2, SQLiteHelper.KEY_EMAIL, SQLiteHelper.KEY_FAVORITO};
+        String[] cols=new String[] {SQLiteHelper.KEY_ID,SQLiteHelper.KEY_NAME, SQLiteHelper.KEY_FONE, SQLiteHelper.KEY_FONE2, SQLiteHelper.KEY_EMAIL,
+                SQLiteHelper.KEY_FAVORITO, SQLiteHelper.KEY_NASCIMENTO};
 
         if(!buscarApenasFavoritos){
             cursor = database.query(SQLiteHelper.DATABASE_TABLE, cols, null , null,
@@ -47,8 +48,8 @@ public class ContatoDAO {
             contato.setFone2(cursor.getString(3));
             contato.setEmail(cursor.getString(4));
             contato.setFavorito(cursor.getInt(5));
+            contato.setDataNascimento(cursor.getString(6));
             contatos.add(contato);
-
 
         }
         cursor.close();
@@ -65,7 +66,9 @@ public class ContatoDAO {
 
         Cursor cursor;
 
-        String[] cols=new String[] {SQLiteHelper.KEY_ID,SQLiteHelper.KEY_NAME, SQLiteHelper.KEY_FONE, SQLiteHelper.KEY_FONE2, SQLiteHelper.KEY_EMAIL};
+        String[] cols=new String[] {SQLiteHelper.KEY_ID,SQLiteHelper.KEY_NAME, SQLiteHelper.KEY_FONE, SQLiteHelper.KEY_FONE2, SQLiteHelper.KEY_EMAIL,
+                SQLiteHelper.KEY_NASCIMENTO};
+
         String where=SQLiteHelper.KEY_NAME + " LIKE ? OR " + SQLiteHelper.KEY_EMAIL + " LIKE ?";
         String[] argWhere=new String[]{nomeEmail + "%", nomeEmail + "%"};
 
@@ -80,6 +83,7 @@ public class ContatoDAO {
             contato.setFone(cursor.getString(2));
             contato.setFone2(cursor.getString(3));
             contato.setEmail(cursor.getString(4));
+            contato.setDataNascimento(cursor.getString(5));
             contatos.add(contato);
         }
 
@@ -98,6 +102,7 @@ public class ContatoDAO {
         values.put(SQLiteHelper.KEY_FONE2, c.getFone2());
         values.put(SQLiteHelper.KEY_EMAIL, c.getEmail());
         values.put(SQLiteHelper.KEY_FAVORITO, c.getFavorito());
+        values.put(SQLiteHelper.KEY_NASCIMENTO, c.getDataNascimento());
 
        if (c.getId() > 0)
           database.update(SQLiteHelper.DATABASE_TABLE, values, SQLiteHelper.KEY_ID + "="

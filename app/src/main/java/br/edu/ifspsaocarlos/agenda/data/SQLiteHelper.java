@@ -30,6 +30,10 @@ class SQLiteHelper extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase database) {
         database.execSQL(DATABASE_CREATE);
+
+        database.execSQL("ALTER TABLE " + DATABASE_TABLE + " ADD COLUMN "  + KEY_FAVORITO + " INTEGER;");
+        database.execSQL("ALTER TABLE " + DATABASE_TABLE + " ADD COLUMN "  + KEY_FONE2 + " TEXT;");
+        database.execSQL("ALTER TABLE " + DATABASE_TABLE + " ADD COLUMN "  + KEY_NASCIMENTO + " DATE;");
     }
 
     @Override
