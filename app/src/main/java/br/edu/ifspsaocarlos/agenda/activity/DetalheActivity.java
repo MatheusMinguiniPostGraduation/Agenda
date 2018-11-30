@@ -6,6 +6,7 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.icu.util.Calendar;
 import android.os.Build;
+import android.provider.CalendarContract;
 import android.support.annotation.RequiresApi;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -18,10 +19,14 @@ import android.view.View;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.text.MessageFormat;
+import java.util.ArrayList;
+import java.util.List;
 
 import br.edu.ifspsaocarlos.agenda.data.ContatoDAO;
+import br.edu.ifspsaocarlos.agenda.erro.ErroValidacao;
 import br.edu.ifspsaocarlos.agenda.model.Contato;
 import br.edu.ifspsaocarlos.agenda.R;
 
@@ -169,6 +174,21 @@ public class DetalheActivity extends AppCompatActivity {
         finish();
     }
 
+    private List<ErroValidacaoCampo> validarFormulario(Contato contato){
+
+        List<ErroValidacaoCampo> erros = new ArrayList<>();
+
+        if(contato.getNome().equals("")){
+            erros.add(new ErroValidacaoCampo("Nome não pode ser vazio", R.id.labelNome));
+        }
+
+        if(contato.getFone().equals("") && contato.getFone2().equals("")){
+            erros.add(new ErroValidacaoCampo("Ao menos um telefone deve ser informado", R.id.labelFone));
+        }
+
+        return erros;
+    }
+
     private void salvar()
     {
         String name = ((EditText) findViewById(R.id.editTextNome)).getText().toString();
@@ -177,8 +197,9 @@ public class DetalheActivity extends AppCompatActivity {
         String email = ((EditText) findViewById(R.id.editTextEmail)).getText().toString();
         String dataNascimento = ((EditText) findViewById(R.id.dataNascimentoEditText)).getText().toString();
 
-        if (c==null)
+        if (c==null){
             c = new Contato();
+        }
 
 
         c.setNome(name);
@@ -186,6 +207,30 @@ public class DetalheActivity extends AppCompatActivity {
         c.setFone2(fone2);
         c.setEmail(email);
         c.setDataNascimento(dataNascimento);
+
+        List<ErroValidacaoCampo> erros = this.validarFormulario(c);
+
+        if(!erros.isEmpty()){
+            TextView mensagensValidacao = findViewById(R.id.mensagemErrotextView);
+            mensagensValidacao.setVisibility(View.VISIBLE);
+
+            String mensagem = "Erros de preenchimento\n";
+
+            int contador = 0;
+
+            despintarLabels();
+
+            for(ErroValidacaoCampo erro : erros){
+                contador++;
+                mensagem += contador + " - " + erro.getMensagem().concat("\n");
+
+                TextView label = findViewById(erro.getCampo());
+                label.setTextColor(Color.RED);
+            }
+
+            mensagensValidacao.setText(mensagem);
+            return;
+        }
 
         cDAO.salvaContato(c);
         //c.setId(10);
@@ -195,9 +240,24 @@ public class DetalheActivity extends AppCompatActivity {
         finish();
     }
 
+    private void despintarLabels(){
+        TextView labelNome = findViewById(R.id.labelNome);
+        TextView labelFone = findViewById(R.id.labelFone);
+        TextView labelFone2 = findViewById(R.id.labelFone2);
+        TextView labelEmail = findViewById(R.id.labelEmail);
+        TextView labelDataNascimento = findViewById(R.id.labelDataNascimento);
+
+        labelNome.setTextColor(Color.BLACK);
+        labelFone.setTextColor(Color.BLACK);
+        labelFone2.setTextColor(Color.BLACK);
+        labelEmail.setTextColor(Color.BLACK);
+        labelDataNascimento.setTextColor(Color.BLACK);
+
+    }
+
 
     //CASO DESEJEM FAZER UM DATE PICKER
-    private void criarDatePicker() {
+   /* private void criarDatePicker() {
 
         final DatePickerDialog.OnDateSetListener mDateSetListener = new DatePickerDialog.OnDateSetListener() {
             @Override
@@ -230,6 +290,6 @@ public class DetalheActivity extends AppCompatActivity {
                 dialog.show();
             }
         });
-    }
+    }*/
 }
 

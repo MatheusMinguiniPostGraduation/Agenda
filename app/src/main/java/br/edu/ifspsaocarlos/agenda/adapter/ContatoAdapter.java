@@ -2,16 +2,12 @@ package br.edu.ifspsaocarlos.agenda.adapter;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.RatingBar;
+import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import br.edu.ifspsaocarlos.agenda.activity.MainActivity;
-import br.edu.ifspsaocarlos.agenda.data.ContatoDAO;
 import br.edu.ifspsaocarlos.agenda.model.Contato;
 import br.edu.ifspsaocarlos.agenda.R;
 
@@ -23,15 +19,12 @@ public class ContatoAdapter extends RecyclerView.Adapter<ContatoAdapter.ContatoV
     private static List<Contato> contatos;
     private Context context;
 
-
     private static ItemClickListener clickListener;
-
-
+    private static FavoritoClickListener favoritoClickListener;
 
     public ContatoAdapter(List<Contato> contatos, Context context) {
         this.contatos = contatos;
         this.context = context;
-
     }
 
     @Override
@@ -40,11 +33,15 @@ public class ContatoAdapter extends RecyclerView.Adapter<ContatoAdapter.ContatoV
         return new ContatoViewHolder(view);
     }
 
-
-
     @Override
     public void onBindViewHolder(ContatoViewHolder holder, int position) {
-       holder.nome.setText(contatos.get(position).getNome());
+        Contato contato = contatos.get(position);
+        holder.nome.setText(contato.getNome());
+
+        if (contato.getFavorito() == 0)
+            holder.favorito.setImageResource(R.drawable.disabled_star);
+        else
+            holder.favorito.setImageResource(R.drawable.enabled_star);
     }
 
     @Override
@@ -57,59 +54,45 @@ public class ContatoAdapter extends RecyclerView.Adapter<ContatoAdapter.ContatoV
         clickListener = itemClickListener;
     }
 
+    public void setFavoritoClickListener(FavoritoClickListener itemClickListener) {
+        favoritoClickListener = itemClickListener;
+    }
+
 
     public  class ContatoViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
         final TextView nome;
+        final ImageView favorito;
 
         ContatoViewHolder(View view) {
             super(view);
             nome = (TextView)view.findViewById(R.id.nome);
             view.setOnClickListener(this);
-            incluirListenerRatingBar((RatingBar) view.findViewById(R.id.ratingBarContato), view.getContext());
+
+            favorito = (ImageView) view.findViewById(R.id.favorito_icone);
+            favorito.setOnClickListener(this);
         }
 
         @Override
         public void onClick(View view) {
 
-            if (clickListener != null)
+            if (view.getId() == R.id.favorito_icone) {
+                if (favoritoClickListener != null)
+                    favoritoClickListener.onItemClick(getAdapterPosition());
+
+            } else if (clickListener != null) {
+
                 clickListener.onItemClick(getAdapterPosition());
+            }
+
         }
     }
-
 
     public interface ItemClickListener {
         void onItemClick(int position);
     }
 
-    private void incluirListenerRatingBar(RatingBar ratingBar, final Context context){
-
-        ratingBar.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                int i = 0;
-            }
-        });
-
-        ratingBar.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {
-            @Override
-            public void onRatingChanged(RatingBar ratingBar, float rating, boolean fromUser) {
-                Contato contato = contatos.get(1); // dar um jeito de pegar o contato clicado
-                contato.setFavorito(Math.round(rating));
-
-                //update contato clicado
-                new ContatoDAO(context).atualizarContato(contato);
-
-                String mensagem;
-                if(contato.getFavorito() == 1){
-                    mensagem = "Contato favoritado";
-                }else{
-                    mensagem = "Contato desfavoritado";
-                }
-
-                Toast.makeText(context, mensagem, Toast.LENGTH_SHORT).show();
-            }
-        });
-
+    public interface FavoritoClickListener {
+        void onItemClick(int position);
     }
 
 }

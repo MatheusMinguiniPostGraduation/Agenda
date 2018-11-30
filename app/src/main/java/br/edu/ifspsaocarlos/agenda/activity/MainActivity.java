@@ -228,6 +228,21 @@ public class MainActivity extends AppCompatActivity{
             }
         });
 
+        adapter.setFavoritoClickListener(new ContatoAdapter.FavoritoClickListener() {
+
+            @Override
+            public void onItemClick(int position) {
+                final Contato contato = contatos.get(position);
+                if (contato.getFavorito() == 0)
+                    contato.setFavorito(1);
+                else
+                    contato.setFavorito(0);
+
+                cDAO.atualizarContato(contato);
+                updateUI(null);
+            }
+        });
+
 
         ItemTouchHelper.SimpleCallback simpleItemTouchCallback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.RIGHT) {
             @Override
