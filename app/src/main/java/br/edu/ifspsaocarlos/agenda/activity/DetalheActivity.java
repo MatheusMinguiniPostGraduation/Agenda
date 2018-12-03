@@ -1,32 +1,26 @@
 package br.edu.ifspsaocarlos.agenda.activity;
 
-import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.icu.util.Calendar;
-import android.os.Build;
-import android.provider.CalendarContract;
-import android.support.annotation.RequiresApi;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import java.text.MessageFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import br.edu.ifspsaocarlos.agenda.data.ContatoDAO;
-import br.edu.ifspsaocarlos.agenda.erro.ErroValidacao;
 import br.edu.ifspsaocarlos.agenda.model.Contato;
 import br.edu.ifspsaocarlos.agenda.R;
 
@@ -179,11 +173,17 @@ public class DetalheActivity extends AppCompatActivity {
         List<ErroValidacaoCampo> erros = new ArrayList<>();
 
         if(contato.getNome().equals("")){
-            erros.add(new ErroValidacaoCampo("Nome não pode ser vazio", R.id.labelNome));
+            erros.add(new ErroValidacaoCampo("O nome não pode ser vazio.", R.id.labelNome));
         }
 
         if(contato.getFone().equals("") && contato.getFone2().equals("")){
-            erros.add(new ErroValidacaoCampo("Ao menos um telefone deve ser informado", R.id.labelFone));
+            erros.add(new ErroValidacaoCampo("Ao menos um telefone deve ser informado.", R.id.labelFone));
+        }
+
+        if(!contato.getDataNascimento().equals("")){
+            if(!verificaDataAtualMenorDataDigitada(contato.getDataNascimento())){
+                erros.add(new ErroValidacaoCampo("A data de nascimento não pode ser futura.", R.id.labelDataNascimento));
+            }
         }
 
         return erros;
@@ -253,6 +253,26 @@ public class DetalheActivity extends AppCompatActivity {
         labelEmail.setTextColor(Color.BLACK);
         labelDataNascimento.setTextColor(Color.BLACK);
 
+    }
+
+
+    private Boolean verificaDataAtualMenorDataDigitada(String date){
+
+
+        try{
+            Date dataDigitada = new SimpleDateFormat("dd/MM/yyyy").parse(date);
+
+            if(dataDigitada.after(new Date())){
+                return Boolean.FALSE;
+            }else{
+                return Boolean.TRUE;
+            }
+
+        }catch(Exception e){
+            Log.i("INFO", e.getMessage());
+        }
+
+        return Boolean.FALSE;
     }
 
 
